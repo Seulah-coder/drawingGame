@@ -20,6 +20,7 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder builder){
+        user.setUserRole(1);
         boolean flag = userService.createUser(user);
 
         if(!flag){
