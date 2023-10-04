@@ -25,7 +25,7 @@ public class RoomController {
     UserService userService;
 
     @GetMapping(value = "/enter")
-    public String viewGamePage(){
+    public String viewEnterGamePage(){
         return "/game/enter";
     }
 
@@ -57,10 +57,16 @@ public class RoomController {
         user.setUserRole(0);
         userService.createUser(user);
         Room room = new Room();
+        room.setRoomOwnerId(user.getId());
         Room returnRoom = roomService.createRoom(room);
         model.addAttribute("room", returnRoom);
 
         return returnRoom;
+    }
+
+    @GetMapping(value = "/startGame")
+    public String viewGamePage(){
+        return "/game/gameRoom";
     }
 
 }

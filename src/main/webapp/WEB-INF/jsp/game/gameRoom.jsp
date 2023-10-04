@@ -6,13 +6,19 @@
 <html>
 <head>
     <title>Title</title>
+    <script src="../../../js/jquery/jquery.js"></script>
+    <script src="../../../js/jquery/jquery-ui.js"></script>
+
     <script>
+
 
     </script>
 </head>
 <body>
 
-<p>다른 학생들을 기다리는 중입니다.</p>
+<input type="text" placeholder="답변을 입력해 주세요.">
+<button>제출</button>
+
 
 </body>
 </html>
