@@ -40,8 +40,8 @@ public class UserService {
     public User patchUser(Long id, User user){
         final Optional<User> fetchedUser = userRepository.findById(id);
         if(fetchedUser.isPresent()){
-            if(user.getName() != null){
-                fetchedUser.get().setName(user.getName());
+            if(user.getUserName() != null){
+                fetchedUser.get().setUserName(user.getUserName());
             }
 
             if(user.getCorrectCount() != 0){

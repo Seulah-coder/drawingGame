@@ -14,8 +14,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    @Column
+    private String userName;
+    @Column
     private String roomCode;
+    @Column
     private int correctCount;
+    @Column
     private String endStatus;
+    @Column
+    private int userRole;
 }
