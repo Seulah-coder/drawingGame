@@ -6,34 +6,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class TypeUtil {
-    /**
-     * Long Value체크
-     * 객체가 Long이 아니면 0 리턴
-     * @param obj
-     * @return
-     */
+
     public static long longValue(Object obj) {
         long value = 0L;
         try {
             value = Long.parseLong(obj.toString());
         } catch (Exception e) {
-            // 아무것도 안해야 실패 시 정상적으로 0이 리턴
+         e.printStackTrace();
         }
         return value;
     }
 
-    /**
-     * Long Value체크
-     * 객체가 Long이 아니면 null 리턴
-     * @param obj
-     * @return
-     */
+
     public static Long longObject(Object obj) {
         Long value = null;
         try {
             value = Long.parseLong(obj.toString());
         } catch (Exception e) {
-            // 아무것도 안해야 실패 시 정상적으로 0이 리턴
+            e.printStackTrace();
         }
         return value;
     }

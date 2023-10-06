@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table
 @Getter
 @Setter
 public class Room {

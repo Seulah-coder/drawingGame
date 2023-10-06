@@ -11,20 +11,14 @@
 
     <script>
 
-        window.enter = function () {
-                const userName = document.getElementById('userName').value;
-                const roomCode = document.getElementById('roomCode').value;
-
-                location.href = '/enter/' + roomCode + "/" + userName;
-
-        }
     </script>
+
 </head>
 <body>
 <h2>공유 받은 입장 코드와 닉네임을 입력해주세요.</h2>
 <form id ="room">
-    <input type="text" id="roomCode" name="roomCode" placeholder="입장코드 입력">
-    <input type="text" id="userName" name="userName" placeholder="이름 입력">
+    <input type="text" id="enterRoomCode" name="roomCode" placeholder="입장코드 입력">
+    <input type="text" id="enterUserName" name="userName" placeholder="이름 입력">
     <input type="button" onclick="enter()" value="확인">
 </form>
 

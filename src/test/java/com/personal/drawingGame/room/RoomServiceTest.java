@@ -1,6 +1,6 @@
 package com.personal.drawingGame.room;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +17,17 @@ public class RoomServiceTest {
     RoomService roomService;
 
     @Test
-    void createRoom() {
+    public void createRoom() {
         Room room = new Room();
         Room returnRoom = roomService.createRoom(room);
         System.out.println("returnRoom = " + returnRoom);
         System.out.println("returnRoom.getRoomCode() = " + returnRoom.getRoomCode());
         System.out.println("returnRoom.getId() = " + returnRoom.getId());
+    }
+
+    @Test
+    public void getRoomByRoomCodeTest(){
+        String roomCode = "AJOO4T";
+        roomService.getRoomByRoomCode(roomCode);
     }
 }

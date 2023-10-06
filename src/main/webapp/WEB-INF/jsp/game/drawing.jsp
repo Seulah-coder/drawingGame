@@ -30,11 +30,165 @@
             slideTargetShape.forEach((target) => target.addEventListener("click", searchShape));
         });
 
+        // 메인 editor -> 미리보기
+        function previewDrawing() {
+            let jsonData = JSON.stringify(canvas.toDatalessJSON());
+            let activePreviewId = document.querySelector('.pagination-box .pagination-area.active').querySelector('canvas').getAttribute("id");
+            const previewWidth = document.querySelector('.pagination-area').clientWidth;
+            const mag = (previewWidth / canvas.width);
+
+            let activePreview = new fabric.Canvas(activePreviewId);
+
+            activePreview.clear();
+            activePreview.setZoom(mag);
+
+            if (jsonData) {
+                activePreview.loadFromJSON(jsonData, activePreview.renderAll.bind(activePreview));
+                activePreview._objects.forEach(obj => {
+                    obj.selectable= false;
+                });
+            }
+        }
+
+        function searchShape() {
+            canvas.isDrawingMode = false;
+            /*        canvas.discardActiveObject().renderAll();*/
+            let slideClassList = document.querySelectorAll(".slide-func");
+            slideClassList.forEach((element) => {
+                element.classList.remove("active")
+            })
+            this.classList.add("active");
+            let shape = this.dataset.shape;
+
+            canvas.getObjects().forEach(function (object) {
+                object.selectable = false;
+                object.evented = false;
+            });
+
+            switch (shape) {
+                //그리기 관련
+                case "rect" :
+                    draw.createRect();
+                    break;
+                case "diamond" :
+                    draw.createDiamond();
+                    break;
+                case "circle" :
+                    draw.createCircle();
+                    break;
+                case "triangle" :
+                    draw.createTriangle();
+                    break;
+                case "iText" :
+                    draw.createItext();
+                    break;
+                case "lines" :
+                    draw.createLines();
+                    break;
+                case "arrowLine" :
+                    draw.createArrowLine();
+                    break;
+                case "bothArrowLine" :
+                    draw.createBothArrowLine();
+                    break;
+                case "rightTriangle" :
+                    draw.createRightTriangle();
+                    break;
+                case "parallelogram" :
+                    draw.createParallelogram();
+                    break;
+                case "pentagon" :
+                    draw.createPentagon();
+                    break;
+                case "hexagon" :
+                    draw.createHexagon();
+                    break;
+                case "freeDrawing" :
+                    draw.freeDrawing();
+                    break;
+                case "table" :
+                    draw.createTable();
+                    break;
+                case "trapezoid" :
+                    draw.createTrapezoid();
+                    break;
+                case "cross" :
+                    draw.createCross();
+                    break;
+                case "octagon" :
+                    draw.createOctagon();
+                    break;
+                case "star" :
+                    let starId = this.getAttribute("id");
+                    draw.createStar(starId);
+                    break;
+                case "squareBubble" :
+                    draw.createSquareBubble();
+                    break;
+
+                case "mathExpression" :
+                    draw.mathExpression();
+                    break;
+
+                //기능 관련 차후에 따로 뺼꺼임
+                case "itemGrouping" :
+                    eventFunction.itemGrouping()
+                    break
+                case "itemUnGrouping" :
+                    eventFunction.itemUnGrouping()
+                    break;
+                case "pdfDownload":
+                    eventFunction.pdfDownload();
+
+                case "appendFile": $(".file-box").show()
+                    break;
+                //정렬 관련
+                case "sort" :
+                    eventFunction.shapeSort(this.getAttribute("id"));
+                    break;
+                case "svg" :
+                    eventFunction.loadSvg(this.getAttribute("id"));
+                    break;
+                case "preview" :
+                    eventFunction.popupPreview();
+                    break;
+                case "bring" :
+                    eventFunction.bring(this.getAttribute("id"));
+                    break;
+                case "convertSvg" :
+                    eventFunction.convertSvg();
+                    break;
+                case "convertJson":
+                    eventFunction.convertJson();
+                    break;
+                case "convertObject":
+                    eventFunction.convertObject();
+                    break;
+                case "leftRightToggle" :
+                    eventFunction.leftRightToggle();
+                    break;
+                case "topBottomToggle" :
+                    eventFunction.topBottomToggle();
+                    break;
+                case "cone" : draw.createCone();
+                    break;
+                case "pyramid" : draw.createPyramid();
+                    break;
+                case "cylinder" : draw.createCylinder();
+                    break;
+
+            }
+            //TODO 캔버스 도형 전부 load 시키기
+            state = JSON.stringify(canvas.toDatalessJSON(['shapeType', 'class', 'customContents']));
+            saveObject();
+
+        }
+
     </script>
 </head>
 <body>
 
-<div>
+<div class="left slide-wrap">
     <button data-shape="selection" type="button" class="btn-tool btn-tool-a slide-func selection"
             style="background-color: mediumpurple">
         선택
@@ -117,7 +271,7 @@
     </button>
 </div>
 
-<div class="slide-area">
+<div class="slide-area" >
     <canvas id="canvas" width="640" height="885">
     </canvas>
 

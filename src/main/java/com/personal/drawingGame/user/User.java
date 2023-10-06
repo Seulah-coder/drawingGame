@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table
 @Getter
 @Setter
 public class User {
@@ -24,4 +23,6 @@ public class User {
     private String endStatus;
     @Column
     private int userRole;
+    @Column
+    private int userOrder;
 }

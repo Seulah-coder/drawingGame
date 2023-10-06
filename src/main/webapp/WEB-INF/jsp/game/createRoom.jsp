@@ -9,38 +9,6 @@
     <script src="../../../js/jquery/jquery.js"></script>
     <script src="../../../js/jquery/jquery-ui.js"></script>
 
-    <script>
-
-        $(function (){
-           $('#startGame').hide();
-        });
-
-        let roomCode;
-
-        window.createRoom = function () {
-            const userName = document.getElementById('userName').value;
-
-            $.ajax({
-                type: 'POST',
-                url: '/createRoom/' + userName,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    console.log(res);
-                    $('#createRoomInfo').hide();
-                    $('#startGame').show();
-                    roomCode = res.roomCode;
-                    $('#roomCode').html(roomCode + '를 학생들에게 공유해 주세요.');
-
-                }
-            })
-
-        }
-
-        window.startGame = function () {
-            location.href = '/startGame/' + roomCode;
-        }
-    </script>
 </head>
 <body>
 
@@ -50,8 +18,9 @@
     <input type="text" id="userName" name="userName" placeholder="이름 입력">
     <input type="button" onclick="createRoom()" value="게임 만들기">
 </div>
-<div id="startGame">
-    <span id="roomCode"></span>
+<div id="startGame" hidden>
+    <input type="hidden" id="ownerId" value="">
+    <span id="createdRoomCode"></span>
     <input type="button" onclick="startGame()" value="게임 시작하기">
 </div>
 </body>

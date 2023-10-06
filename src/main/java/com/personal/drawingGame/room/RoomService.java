@@ -48,6 +48,10 @@ public class RoomService {
         return roomRepository.findById(id);
     }
 
+    public Room getRoomByRoomCode(String roomCode) {
+        return roomRepository.findByRoomCode(roomCode);
+    }
+
     public Room updateRoom(Long id, Room room){
         final Optional<Room> fetchedRoom = roomRepository.findById(id);
         if(fetchedRoom.isPresent()){

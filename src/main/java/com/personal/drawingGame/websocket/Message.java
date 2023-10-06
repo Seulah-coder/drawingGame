@@ -13,6 +13,9 @@ public class Message {
 
     private Long id;
     public String data;
+    public String sendMessage;
+    public String type;
+    public String userName;
 
 
 }
