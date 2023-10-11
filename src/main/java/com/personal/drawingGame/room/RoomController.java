@@ -47,13 +47,13 @@ public class RoomController {
 
             User user = new User();
             user.setUserName(userName);
-
             user.setUserRole(1);
-            userService.createUser(user);
+
 
             Room findRoom = roomService.getRoomByRoomCode(roomCode);
             if(findRoom != null){
                 user.setRoomCode(findRoom.getRoomCode());
+                userService.createUser(user);
                 returnMap.put("user", user);
             } else {
                 returnMap.put("error", "해당 이름으로 생성된 방 없음");
@@ -78,6 +78,11 @@ public class RoomController {
     @GetMapping(value = "/drawing")
     public String viewDrawingPage(){
         return "/game/drawing";
+    }
+
+    @GetMapping(value = "/drawingView")
+    public String viewDrawingViewPage(){
+        return "/game/drawingView";
     }
 
     @PostMapping(value = "/createRoom/{userName}")

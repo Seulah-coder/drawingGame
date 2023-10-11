@@ -84,7 +84,8 @@ function onMouseUp(e) {
     $('.rotate-angle').hide();
 
     // 메인 editor -> 미리보기 그리기
-    previewDrawing();
+    // previewDrawing();
+    sendDrawingData();
 }
 
 function onMouseWheel(opt){

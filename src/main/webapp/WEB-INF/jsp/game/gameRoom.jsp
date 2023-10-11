@@ -93,7 +93,17 @@
                 dataType: 'html',
                 success:function (data){
                     $('#viewer').html(data);
-                    $('#waitingMessage').hide();
+                    $('#waiting').hide();
+
+                    const roomCode = document.getElementById('roomCode').value;
+
+                    const message = {
+                        roomId: roomCode,
+                        type: "drawing",
+                    }
+
+                    stomp.send('/pub/game', {}, JSON.stringify(message));
+
 
                 },
                 error: function (jqXHR, status, error){
@@ -144,9 +154,75 @@
             })
         }
 
-
+        let studentCount = 0;
         window.handler = function (payload){
-            console.log(payload);
+
+            const content = JSON.parse(payload.body);
+            console.log(content);
+
+            if(content.type === "enter"){
+                enterHandler(content.userName);
+            } else if(content.type === 'drawing'){
+                drawingHandler();
+            } else if(content.type === 'sendDrawingData'){
+                sendDrawingDataHandler(content.data);
+            }
+
+        }
+
+        window.sendDrawingDataHandler = function (data){
+            const viewCanvas = document.getElementById('viewCanvas');
+
+            let activePreview = new fabric.Canvas(viewCanvas);
+            activePreview.loadFromJSON(data, activePreview.renderAll.bind(activePreview));
+        }
+
+        window.drawingHandler = function (){
+            const userRole = document.getElementById('userRole').value;
+            console.log(userRole);
+
+            if(parseInt(userRole) === 1){
+                $.ajax({
+                    type: "GET",
+                    url: '/drawingView',
+                    cache: false,
+                    dataType: 'html',
+                    success:function (data){
+                        $('#viewer').html(data);
+                        $('#waiting').hide();
+                        $('#enterButton').hide();
+                        $('#userInfo').show();
+
+                        const roomCode = document.getElementById('roomCode').value;
+
+                        const message = {
+                            roomId: roomCode,
+                            type: "drawingView",
+                        }
+
+                        stomp.send('/pub/game', {}, JSON.stringify(message));
+
+
+                    },
+                    error: function (jqXHR, status, error){
+                        alert('에러 발생');
+                    }
+                });
+            }
+
+
+        }
+
+        window.enterHandler = function (userName){
+            console.log(userName);
+
+            const userRole = document.getElementById('userRole').value;
+            console.log(userRole);
+
+            studentCount ++;
+            $('#studentCount').html(studentCount+ "명");
+            $('#waitingList').append(userName + "이 입장했습니다.");
+
         }
 
         let roomCode;
@@ -175,7 +251,7 @@
                     $('#userName').val(userInfo.userName);
                     $('#userRole').val(userInfo.userRole);
 
-                    stomp.subscribe('/sub/game/' + roomCode);
+                    stomp.subscribe('/sub/game/' + roomCode, handler);
 
                 }
             })
@@ -199,9 +275,16 @@
 
 </div>
 
-<p id="waitingMessage" hidden> 참여자를 기다리고 있습니다.</p>
-
 <div id="viewer"></div>
+
+<div id="waiting">
+<p id="waitingMessage" hidden> 참여자를 기다리고 있습니다.</p>
+    <div id="waitingList">
+
+    </div>
+</div>
+
+
 
 <div id="userInfo" hidden>
 <input type="hidden" id="userRole">

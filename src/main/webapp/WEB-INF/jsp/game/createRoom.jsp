@@ -21,6 +21,7 @@
 <div id="startGame" hidden>
     <input type="hidden" id="ownerId" value="">
     <span id="createdRoomCode"></span>
+    <span id="studentCount"></span>
     <input type="button" onclick="startGame()" value="게임 시작하기">
 </div>
 </body>

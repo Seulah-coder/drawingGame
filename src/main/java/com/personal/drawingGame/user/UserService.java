@@ -1,9 +1,11 @@
 package com.personal.drawingGame.user;
 
+import com.personal.drawingGame.common.util.TypeUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,7 +16,8 @@ public class UserService {
 
     public boolean createUser(User user){
         try {
-
+            Long countUser = this.countUserByRoomCode(user.getRoomCode());
+            user.setUserOrder(TypeUtil.intValue(countUser) + 1);
             user.setCorrectCount(0);
             userRepository.save(user);
           return true;
@@ -62,5 +65,13 @@ public class UserService {
         } else {
             return false;
         }
+    }
+
+    public Long countUserByRoomCode(String roomCode){
+        return userRepository.countUserByRoomCode(roomCode);
+    }
+
+    public List<User> findAllByRoomCode(String roomCode){
+        return userRepository.findAllByRoomCode(roomCode);
     }
 }

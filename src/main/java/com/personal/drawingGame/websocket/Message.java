@@ -16,6 +16,7 @@ public class Message {
     public String sendMessage;
     public String type;
     public String userName;
+    public int userRole;
 
 
 }

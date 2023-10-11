@@ -2,6 +2,7 @@ package com.personal.drawingGame.websocket;
 
 import com.personal.drawingGame.common.util.TypeUtil;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -33,6 +34,7 @@ public class StompController {
             Message message = new Message();
             message.setUserName(TypeUtil.stringValue(param.get("userName")));
             message.setType(TypeUtil.stringValue(param.get("type")));
+            message.setData(TypeUtil.stringValue(param.get("data")));
             template.convertAndSend("/sub/game/" + roomCode, message);
 
         } catch (Exception e){

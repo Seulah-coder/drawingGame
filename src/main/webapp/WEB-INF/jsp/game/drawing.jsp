@@ -31,23 +31,39 @@
         });
 
         // 메인 editor -> 미리보기
-        function previewDrawing() {
+        // function previewDrawing() {
+        //     let jsonData = JSON.stringify(canvas.toDatalessJSON());
+        //     let activePreviewId = document.querySelector('.pagination-box .pagination-area.active').querySelector('canvas').getAttribute("id");
+        //     const previewWidth = document.querySelector('.pagination-area').clientWidth;
+        //     const mag = (previewWidth / canvas.width);
+        //
+        //     let activePreview = new fabric.Canvas(activePreviewId);
+        //
+        //     activePreview.clear();
+        //     activePreview.setZoom(mag);
+        //
+        //     if (jsonData) {
+        //         activePreview.loadFromJSON(jsonData, activePreview.renderAll.bind(activePreview));
+        //         activePreview._objects.forEach(obj => {
+        //             obj.selectable= false;
+        //         });
+        //     }
+        // }
+
+        function sendDrawingData(){
             let jsonData = JSON.stringify(canvas.toDatalessJSON());
-            let activePreviewId = document.querySelector('.pagination-box .pagination-area.active').querySelector('canvas').getAttribute("id");
-            const previewWidth = document.querySelector('.pagination-area').clientWidth;
-            const mag = (previewWidth / canvas.width);
+            console.log(jsonData);
+            const roomCode = document.getElementById('roomCode').value;
 
-            let activePreview = new fabric.Canvas(activePreviewId);
-
-            activePreview.clear();
-            activePreview.setZoom(mag);
-
-            if (jsonData) {
-                activePreview.loadFromJSON(jsonData, activePreview.renderAll.bind(activePreview));
-                activePreview._objects.forEach(obj => {
-                    obj.selectable= false;
-                });
+            const message = {
+                roomId: roomCode,
+                type: "sendDrawingData",
+                data: jsonData
             }
+
+            stomp.send('/pub/game', {}, JSON.stringify(message));
+
+
         }
 
         function searchShape() {
