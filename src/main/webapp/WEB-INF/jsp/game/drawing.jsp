@@ -52,7 +52,6 @@
 
         function sendDrawingData(){
             let jsonData = JSON.stringify(canvas.toDatalessJSON());
-            console.log(jsonData);
             const roomCode = document.getElementById('roomCode').value;
 
             const message = {
@@ -287,8 +286,8 @@
     </button>
 </div>
 
-<div class="slide-area" >
-    <canvas id="canvas" width="640" height="885">
+<div class="slide-area" style="border-width: 5px; border-color: black" >
+    <canvas id="canvas" width="640" height="500">
     </canvas>
 
 </div>

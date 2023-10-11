@@ -25,13 +25,11 @@
             const URL = "/stomp/game"
 
             const sock = new SockJS(URL);
-            console.log(sock);
             stomp = Stomp.over(sock);
             stomp.connect({} , onConnected, onError);
         }
 
         window.onConnected = function (test){
-            console.log(test);
             console.log("connected!!!!!!!!!!!!!");
 
         };
@@ -94,6 +92,7 @@
                 success:function (data){
                     $('#viewer').html(data);
                     $('#waiting').hide();
+                    $('#answerView').show();
 
                     const roomCode = document.getElementById('roomCode').value;
 
@@ -124,8 +123,6 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    console.log(res);
-
 
                     if(!res.user){
                         alert(res.error);
@@ -158,7 +155,6 @@
         window.handler = function (payload){
 
             const content = JSON.parse(payload.body);
-            console.log(content);
 
             if(content.type === "enter"){
                 enterHandler(content.userName);
@@ -179,7 +175,7 @@
 
         window.drawingHandler = function (){
             const userRole = document.getElementById('userRole').value;
-            console.log(userRole);
+
 
             if(parseInt(userRole) === 1){
                 $.ajax({
@@ -202,6 +198,19 @@
 
                         stomp.send('/pub/game', {}, JSON.stringify(message));
 
+                        $.ajax({
+                            type: "GET",
+                            url: '/answering',
+                            cache: false,
+                            dataType: 'html',
+                            success:function (data){
+                                $('#answering').html(data);
+                            },
+                            error: function (jqXHR, status, error){
+                                alert('에러 발생');
+                            }
+                        });
+
 
                     },
                     error: function (jqXHR, status, error){
@@ -214,10 +223,9 @@
         }
 
         window.enterHandler = function (userName){
-            console.log(userName);
+
 
             const userRole = document.getElementById('userRole').value;
-            console.log(userRole);
 
             studentCount ++;
             $('#studentCount').html(studentCount+ "명");
@@ -236,7 +244,7 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    console.log(res);
+
                     const roomInfo = res.room;
                     const userInfo = res.user;
                     $('#ownerId').val(roomInfo.roomOwnerId);
@@ -262,6 +270,36 @@
             location.href = "/";
         }
 
+        window.submitAnswer = function (){
+            const roomCode = document.getElementById('roomCode').value;
+            const writeAnswer = document.getElementById('writeAnswer');
+            const changeToImage = writeAnswer.toDataURL();
+
+
+            var data =  {"imageUrl" : changeToImage ,  "roomCode": roomCode}
+
+            $.ajax({
+                type:"POST",
+                url: '/ocrProgress',
+                cache:false,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success:function (data){
+
+                    const answer = "사람";
+
+                    const correctAnswer = $('#answer').html();
+                    if(correctAnswer === answer){
+                        alert("정답");
+                    }
+
+                },
+                error: function (jqXHR, status, error){
+                }
+            });
+        }
+
+
 
     </script>
 </head>
@@ -269,10 +307,14 @@
 
 
 <button onclick="home()"> 홈 </button>
+
 <div id="enterButton">
 <button onclick="create()"> 게임 만들기 </button>
 <button onclick="enterGame()"> 참여하기 </button>
+</div>
 
+<div id="answerView" hidden>
+<h2> 정답 : <span id="answer">사람</span></h2>
 </div>
 
 <div id="viewer"></div>
@@ -285,14 +327,14 @@
 </div>
 
 
-
 <div id="userInfo" hidden>
 <input type="hidden" id="userRole">
 <input type="hidden" id="userName">
 <input type="hidden" id="roomCode">
-<input type="text" id="answer" placeholder="답변을 입력해 주세요.">
-<button>제출</button>
+
 </div>
+
+<div id="answering"></div>
 
 
 </body>

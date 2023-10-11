@@ -85,6 +85,11 @@ public class RoomController {
         return "/game/drawingView";
     }
 
+    @GetMapping(value = "/answering")
+    public String viewAnsweringPage(){
+        return "/game/answering";
+    }
+
     @PostMapping(value = "/createRoom/{userName}")
     @ResponseBody
     public Map<String, Object> createRoom(@PathVariable("userName") String userName, Model model){

@@ -6,13 +6,23 @@
 <html>
 <head>
     <title>Title</title>
-    <script>
 
+    <script>
+        var answerCanvas;
+
+        $(function (){
+            answerCanvas = new fabric.Canvas("writeAnswer");
+            answerCanvas.isDrawingMode = true;
+        })
     </script>
 </head>
 <body>
 
-<p>다른 학생들을 기다리는 중입니다.</p>
+<h2>답변을 입력해 주세요.</h2>
+
+<canvas id="writeAnswer" width="450" height="450"></canvas>
+<button onclick="submitAnswer()">제출</button>
+
 
 </body>
 </html>
