@@ -11,12 +11,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Message {
 
-    private Long id;
+    public Long id;
     public String data;
     public String sendMessage;
     public String type;
     public String userName;
     public int userRole;
+    public String writeAnswer;
+    public String correctAnswer;
 
 
 }

@@ -163,6 +163,40 @@
                 drawingHandler();
             } else if(content.type === 'sendDrawingData'){
                 sendDrawingDataHandler(content.data);
+            } else if(content.type === 'submitAnswer'){
+                checkSubmitAnswer(content);
+            } else if(content.type === 'correctAnswer'){
+                correctAnswer(content);
+            }
+
+        }
+
+        window.correctAnswer = function (content){
+            const correctUser = content.userName;
+            alert(correctUser + "정답! 정답은 " + content.correctAnswer);
+            $('#chatting').empty();
+        }
+
+        window.checkSubmitAnswer= function (data){
+            const roomId = document.getElementById('roomCode').value;
+            const userRole = document.getElementById('userRole').value;
+            if(parseInt(userRole) === 0){
+                const correctAnswer = document.getElementById('correctAnswer')
+                if(correctAnswer.innerText && correctAnswer.innerText === data.writeAnswer){
+                  //정답이면 alert 보내고 5초 후에 끄고 다음 화면으로 넘어가는 로직
+                    const message = {
+                        roomId: roomId,
+                        userName: data.userName,
+                        correctAnswer : correctAnswer.innerText,
+                        type: "correctAnswer",
+                    }
+                    stomp.send('/pub/game', {}, JSON.stringify(message));
+                } else {
+                    const chatSpace = document.getElementById('chatting');
+                    let html = '';
+                    html += '<p>'+ data.userName +' : '+ data.writeAnswer+'</p>';
+                    chatSpace.innerHTML = chatSpace.innerHTML + html;
+                }
             }
 
         }
@@ -274,25 +308,37 @@
         }
 
         window.submitAnswer = function (){
+            const userName = document.getElementById('userName').value;
             const roomCode = document.getElementById('roomCode').value;
-            const writeAnswer = document.getElementById('writeAnswer');
-            var data =  {"writeAnswer" : writeAnswer.value ,  "roomCode": roomCode}
+            const writeAnswer = document.getElementById('writeAnswer').value;
 
-            console.log(data);
+            const message = {
+                "userName" : userName,
+                "roomId" : roomCode,
+                "writeAnswer" : writeAnswer,
+                "type": "submitAnswer"
+            }
 
-            $.ajax({
-                        type:"POST",
-                        url: '/submitAnswer',
-                        cache:false,
-                        contentType: "application/json",
-                        data: data,
-                        success:function (data){
+            stomp.send('/pub/game', {}, JSON.stringify(message));
 
-
-                        },
-                        error: function (jqXHR, status, error){
-                        }
-                    });
+            // console.log(writeAnswer);
+            // console.log(correctAnswer);
+            //
+            // // var data =  {"writeAnswer" : writeAnswer.value ,  "roomCode": roomCode}
+            //
+            // $.ajax({
+            //             type:"POST",
+            //             url: '/submitAnswer',
+            //             cache:false,
+            //             contentType: "application/json",
+            //             data: data,
+            //             success:function (data){
+            //
+            //
+            //             },
+            //             error: function (jqXHR, status, error){
+            //             }
+            //         });
 
         }
 
@@ -360,8 +406,11 @@
 
 </div>
 
+
 <div id="answering"></div>
 
+
+<div id="chatting"></div>
 
 </body>
 </html>

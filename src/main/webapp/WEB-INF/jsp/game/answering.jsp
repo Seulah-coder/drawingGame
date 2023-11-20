@@ -21,7 +21,8 @@
 
 <h2>답변을 입력해 주세요.</h2>
 
-<canvas id="writeAnswer" width="450" height="450"></canvas>
+<%--<canvas id="writeAnswer" width="450" height="450"></canvas>--%>
+<input type="text" id="writeAnswer">
 <button onclick="submitAnswer()">제출</button>
 
 

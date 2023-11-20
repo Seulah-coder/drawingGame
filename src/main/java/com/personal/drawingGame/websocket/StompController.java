@@ -31,10 +31,17 @@ public class StompController {
             System.out.println("param = " + param);
 
             String roomCode = TypeUtil.stringValue(param.get("roomId"));
+            String type = TypeUtil.stringValue(param.get("type"));
             Message message = new Message();
             message.setUserName(TypeUtil.stringValue(param.get("userName")));
-            message.setType(TypeUtil.stringValue(param.get("type")));
+            message.setType(type);
             message.setData(TypeUtil.stringValue(param.get("data")));
+            System.out.println("type = " + type);
+            if(("submitAnswer").equals(type)){
+                message.setWriteAnswer(TypeUtil.stringValue(param.get("writeAnswer")));
+            } else if(("correctAnswer").equals(type)){
+                message.setCorrectAnswer(TypeUtil.stringValue(param.get("correctAnswer")));
+            }
             template.convertAndSend("/sub/game/" + roomCode, message);
 
         } catch (Exception e){

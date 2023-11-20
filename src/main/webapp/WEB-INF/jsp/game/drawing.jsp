@@ -288,10 +288,10 @@
 </div>
 
 <div id="answerView" hidden>
-    <h2> 정답 : <span id="answer">${question.question}</span></h2>
+    <h2> 정답 : <span id="correctAnswer">${question.question}</span></h2>
 </div>
 
-<div class="slide-area" style="border-width: 5px; border-color: black" >
+<div class="slide-area" style="border: 5px solid black;" >
     <canvas id="canvas" width="640" height="500">
     </canvas>
 

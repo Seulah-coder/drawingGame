@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<canvas id="viewCanvas" width="640" height="885" aria-disabled="true"></canvas>
+<canvas id="viewCanvas" width="640" height="500" aria-disabled="true" style="border: 5px solid black;"></canvas>
 
 </body>
 </html>
