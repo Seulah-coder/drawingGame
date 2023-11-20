@@ -28,6 +28,7 @@
 
             let slideTargetShape = document.querySelectorAll(".slide-func");
             slideTargetShape.forEach((target) => target.addEventListener("click", searchShape));
+
         });
 
         // 메인 editor -> 미리보기
@@ -284,6 +285,10 @@
     <button data-shape="squareBubble" type="button" class="btn-tool btn-tool-a slide-func squareBubble">
         사각 말풍선
     </button>
+</div>
+
+<div id="answerView" hidden>
+    <h2> 정답 : <span id="answer">${question.question}</span></h2>
 </div>
 
 <div class="slide-area" style="border-width: 5px; border-color: black" >

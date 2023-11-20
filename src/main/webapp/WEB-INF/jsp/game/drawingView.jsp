@@ -15,6 +15,11 @@
     <script type="text/javascript" src="/js/fabric/fabric.js"></script>
     <script src="/js/fabric/svgPath.js"></script>
     <script src="/js/fabric/snappy.js"></script>
+    <script>
+        const userInfo = document.getElementById('userRole');
+        console.log(userInfo.value);
+
+    </script>
 </head>
 <body>
 

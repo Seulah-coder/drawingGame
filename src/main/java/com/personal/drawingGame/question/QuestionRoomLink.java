@@ -8,11 +8,15 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Question {
+public class QuestionRoomLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
-    private String question;
+    private String jsonData;
+    @Column
+    private int roomId;
+    @Column
+    private int questionOrder;
 }

@@ -98,7 +98,6 @@ public class ApiType {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return map;
     }
 }

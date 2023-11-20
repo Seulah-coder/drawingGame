@@ -2,13 +2,39 @@ package com.personal.drawingGame.question;
 
 import com.personal.drawingGame.common.util.FileUtil;
 import com.personal.drawingGame.common.util.TypeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class QuestionService {
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    public Map<String, Object> submitAnswer(Map<String, Object> params) {
+
+        Map<String, Object> resultMap = new HashMap<>();
+        System.out.println("resultMap = " + resultMap);
+
+        return resultMap;
+    }
+
+    public Question getQuestion(){
+
+        Question question = new Question();
+
+        List<Question> ramdomQuestion = questionRepository.findOneByRandom();
+
+        question = ramdomQuestion.get(0);
+
+        return question;
+    }
 
     public Map<String, Object> ocrProgress(Map<String, Object> params) throws Exception{
 

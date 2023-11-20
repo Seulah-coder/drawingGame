@@ -8,12 +8,13 @@
     <title>Title</title>
 
     <script>
-        var answerCanvas;
-
-        $(function (){
-            answerCanvas = new fabric.Canvas("writeAnswer");
-            answerCanvas.isDrawingMode = true;
-        })
+        //ocr 로 변환해서 정답 입력할 경우
+        // var answerCanvas;
+        //
+        // $(function (){
+        //     answerCanvas = new fabric.Canvas("writeAnswer");
+        //     answerCanvas.isDrawingMode = true;
+        // })
     </script>
 </head>
 <body>

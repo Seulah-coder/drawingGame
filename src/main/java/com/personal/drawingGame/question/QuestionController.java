@@ -19,6 +19,19 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
+    @PostMapping("/submitAnswer")
+    @ResponseBody
+    public Map<String, Object> submitAnswer(HttpServletRequest request, Map<String, Object> params){
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            resultMap = questionService.submitAnswer(params);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultMap;
+    }
+
     @PostMapping("/ocrProgress")
     @ResponseBody
     public Map<String, Object> ocrProgress(HttpServletRequest request, @RequestBody HashMap<String, Object> params, HttpSession session, HttpServletResponse response){

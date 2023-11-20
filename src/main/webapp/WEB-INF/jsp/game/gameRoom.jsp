@@ -15,8 +15,9 @@
         let stomp;
         $(function (){
 
-            connectSocket();
 
+
+            connectSocket();
 
         });
 
@@ -169,7 +170,9 @@
         window.sendDrawingDataHandler = function (data){
             const viewCanvas = document.getElementById('viewCanvas');
 
-            let activePreview = new fabric.Canvas(viewCanvas);
+            let activePreview = new fabric.Canvas(viewCanvas, {
+                interactive: false,
+            });
             activePreview.loadFromJSON(data, activePreview.renderAll.bind(activePreview));
         }
 
@@ -273,31 +276,55 @@
         window.submitAnswer = function (){
             const roomCode = document.getElementById('roomCode').value;
             const writeAnswer = document.getElementById('writeAnswer');
-            const changeToImage = writeAnswer.toDataURL();
+            var data =  {"writeAnswer" : writeAnswer.value ,  "roomCode": roomCode}
 
-
-            var data =  {"imageUrl" : changeToImage ,  "roomCode": roomCode}
+            console.log(data);
 
             $.ajax({
-                type:"POST",
-                url: '/ocrProgress',
-                cache:false,
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success:function (data){
+                        type:"POST",
+                        url: '/submitAnswer',
+                        cache:false,
+                        contentType: "application/json",
+                        data: data,
+                        success:function (data){
 
-                    const answer = "사람";
 
-                    const correctAnswer = $('#answer').html();
-                    if(correctAnswer === answer){
-                        alert("정답");
-                    }
+                        },
+                        error: function (jqXHR, status, error){
+                        }
+                    });
 
-                },
-                error: function (jqXHR, status, error){
-                }
-            });
         }
+
+        // 캔버스에 답변 그리고 ocr 변환해서 답변 입력 할경우
+        // window.submitAnswer = function (){
+        //     const roomCode = document.getElementById('roomCode').value;
+        //     const writeAnswer = document.getElementById('writeAnswer');
+        //     const changeToImage = writeAnswer.toDataURL();
+        //
+        //
+        //     var data =  {"imageUrl" : changeToImage ,  "roomCode": roomCode}
+        //
+        //     $.ajax({
+        //         type:"POST",
+        //         url: '/ocrProgress',
+        //         cache:false,
+        //         contentType: "application/json",
+        //         data: JSON.stringify(data),
+        //         success:function (data){
+        //
+        //             const answer = "사람";
+        //
+        //             const correctAnswer = $('#answer').html();
+        //             if(correctAnswer === answer){
+        //                 alert("정답");
+        //             }
+        //
+        //         },
+        //         error: function (jqXHR, status, error){
+        //         }
+        //     });
+        // }
 
 
 
@@ -313,9 +340,7 @@
 <button onclick="enterGame()"> 참여하기 </button>
 </div>
 
-<div id="answerView" hidden>
-<h2> 정답 : <span id="answer">사람</span></h2>
-</div>
+
 
 <div id="viewer"></div>
 
@@ -329,6 +354,7 @@
 
 <div id="userInfo" hidden>
 <input type="hidden" id="userRole">
+<input type="hidden" id="userOrder">
 <input type="hidden" id="userName">
 <input type="hidden" id="roomCode">
 

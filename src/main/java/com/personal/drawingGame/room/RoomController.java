@@ -1,6 +1,8 @@
 package com.personal.drawingGame.room;
 
 import com.personal.drawingGame.common.util.TypeUtil;
+import com.personal.drawingGame.question.Question;
+import com.personal.drawingGame.question.QuestionService;
 import com.personal.drawingGame.user.User;
 import com.personal.drawingGame.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,9 @@ public class RoomController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    QuestionService questionService;
+
     @GetMapping(value = "/")
     public String viewGamePage(){
         return "/game/gameRoom";
@@ -48,7 +53,6 @@ public class RoomController {
             User user = new User();
             user.setUserName(userName);
             user.setUserRole(1);
-
 
             Room findRoom = roomService.getRoomByRoomCode(roomCode);
             if(findRoom != null){
@@ -76,7 +80,9 @@ public class RoomController {
     }
 
     @GetMapping(value = "/drawing")
-    public String viewDrawingPage(){
+    public String viewDrawingPage(Model model){
+        Question question = questionService.getQuestion();
+        model.addAttribute("question", question);
         return "/game/drawing";
     }
 
