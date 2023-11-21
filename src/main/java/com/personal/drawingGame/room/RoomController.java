@@ -53,6 +53,7 @@ public class RoomController {
             User user = new User();
             user.setUserName(userName);
             user.setUserRole(1);
+            user.setAskingYn("N");
 
             Room findRoom = roomService.getRoomByRoomCode(roomCode);
             if(findRoom != null){
@@ -103,6 +104,7 @@ public class RoomController {
         User user = new User();
         user.setUserName(userName);
         user.setUserRole(0);
+        user.setAskingYn("Y");
         userService.createUser(user);
 
         Room room = new Room();

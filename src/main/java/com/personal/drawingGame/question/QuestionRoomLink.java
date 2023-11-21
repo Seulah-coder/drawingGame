@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class QuestionRoomLink {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column
     private String jsonData;

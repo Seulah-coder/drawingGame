@@ -10,5 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Long countUserByRoomCode(String roomCode);
 
-    List<User> findAllByRoomCode(String roomCode);
+    List<User> findAllByRoomCodeOrderByUserOrder(String roomCode);
+
 }

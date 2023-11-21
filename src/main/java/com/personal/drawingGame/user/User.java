@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column
     private String userName;
@@ -25,4 +25,6 @@ public class User {
     private int userRole;
     @Column
     private int userOrder;
+    @Column
+    private String askingYn;
 }

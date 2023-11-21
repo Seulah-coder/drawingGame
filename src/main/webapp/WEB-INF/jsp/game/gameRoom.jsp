@@ -15,8 +15,6 @@
         let stomp;
         $(function (){
 
-
-
             connectSocket();
 
         });
@@ -82,6 +80,12 @@
         // }
 
         window.startGame = function () {
+
+            console.log(studentCount);
+            if(studentCount === 0){
+                alert("참여자가 아무도 없습니다.")
+                return;
+            }
 
             $('#viewer').empty();
 
@@ -167,7 +171,15 @@
                 checkSubmitAnswer(content);
             } else if(content.type === 'correctAnswer'){
                 correctAnswer(content);
+            } else if(content.type === 'moveNextQuestion'){
+                moveNextQuestion();
             }
+
+        }
+
+        window.moveNextQuestion = function (content){
+
+            console.log(content);
 
         }
 
@@ -180,7 +192,8 @@
         window.checkSubmitAnswer= function (data){
             const roomId = document.getElementById('roomCode').value;
             const userRole = document.getElementById('userRole').value;
-            if(parseInt(userRole) === 0){
+            const askingYn = document.getElementById('askingYn').value;
+            if(askingYn === "Y"){
                 const correctAnswer = document.getElementById('correctAnswer')
                 if(correctAnswer.innerText && correctAnswer.innerText === data.writeAnswer){
                   //정답이면 alert 보내고 5초 후에 끄고 다음 화면으로 넘어가는 로직
@@ -190,7 +203,19 @@
                         correctAnswer : correctAnswer.innerText,
                         type: "correctAnswer",
                     }
-                    stomp.send('/pub/game', {}, JSON.stringify(message));
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/submitAnswer',
+                            cache: false,
+                            dataType: 'json',
+                            data: message,
+                            success:function (data){
+
+                                stomp.send('/pub/game', {}, JSON.stringify(message));
+                            },
+                        });
+
                 } else {
                     const chatSpace = document.getElementById('chatting');
                     let html = '';
@@ -211,10 +236,9 @@
         }
 
         window.drawingHandler = function (){
-            const userRole = document.getElementById('userRole').value;
+            const askingYn = document.getElementById('askingYn').value;
 
-
-            if(parseInt(userRole) === 1){
+            if(askingYn === "N"){
                 $.ajax({
                     type: "GET",
                     url: '/drawingView',
@@ -225,6 +249,7 @@
                         $('#waiting').hide();
                         $('#enterButton').hide();
                         $('#userInfo').show();
+
 
                         const roomCode = document.getElementById('roomCode').value;
 
@@ -295,6 +320,7 @@
                     $('#roomCode').val(userInfo.roomCode);
                     $('#userName').val(userInfo.userName);
                     $('#userRole').val(userInfo.userRole);
+                    $('#askingYn').val(userInfo.askingYn);
 
                     stomp.subscribe('/sub/game/' + roomCode, handler);
 
@@ -402,6 +428,7 @@
 <input type="hidden" id="userRole">
 <input type="hidden" id="userOrder">
 <input type="hidden" id="userName">
+<input type="hidden" id="askingYn">
 <input type="hidden" id="roomCode">
 
 </div>

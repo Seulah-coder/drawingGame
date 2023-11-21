@@ -13,7 +13,7 @@ import java.sql.Date;
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column
     private String roomCode;

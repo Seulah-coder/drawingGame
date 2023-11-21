@@ -1,7 +1,6 @@
 package com.personal.drawingGame.user;
 
 import com.personal.drawingGame.common.util.TypeUtil;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +73,7 @@ public class UserService {
         return userRepository.countUserByRoomCode(roomCode);
     }
 
-    public List<User> findAllByRoomCode(String roomCode){
-        return userRepository.findAllByRoomCode(roomCode);
+    public List<User> findAllByRoomCodeOrderByUserOrder(String roomCode){
+        return userRepository.findAllByRoomCodeOrderByUserOrder(roomCode);
     }
 }

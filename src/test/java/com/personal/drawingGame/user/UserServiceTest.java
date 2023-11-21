@@ -62,7 +62,7 @@ public class UserServiceTest {
         newUser2.setUserRole(0);
         userService.createUser(newUser2);
 
-        List<User> lists = userService.findAllByRoomCode(roomCode);
+        List<User> lists = userService.findAllByRoomCodeOrderByUserOrder(roomCode);
         System.out.println("lists = " + lists.size());
     }
 }

@@ -2,6 +2,8 @@ package com.personal.drawingGame.question;
 
 import com.personal.drawingGame.common.util.FileUtil;
 import com.personal.drawingGame.common.util.TypeUtil;
+import com.personal.drawingGame.user.User;
+import com.personal.drawingGame.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,36 @@ public class QuestionService {
     @Autowired
     QuestionRepository questionRepository;
 
-    public Map<String, Object> submitAnswer(Map<String, Object> params) {
+    @Autowired
+    UserRepository userRepository;
 
+    public Map<String, Object> submitAnswer(Map<String, Object> params) {
+        System.out.println("params = " + params);
         Map<String, Object> resultMap = new HashMap<>();
+        //답을 맞추면 다음 user를 askingYn을 y로 만들어야 함
+        Long userId = TypeUtil.longValue(params.get("userId"));
+        User user = userRepository.getById(userId);
+        user.setCorrectCount(user.getCorrectCount() + 1);
+        userRepository.save(user);
+        //맞춘 count 올려줌
+
+        //다음 순서 찾아서 askingYn바꿔줘야함
+        String roomCode = TypeUtil.stringValue(params.get("roomCode"));
+        List<User> users = userRepository.findAllByRoomCodeOrderByUserOrder(roomCode);
+        int order = 0;
+        for (User changeUser : users) {
+            if (changeUser.getAskingYn().equals("Y")) {
+                order = changeUser.getUserOrder();
+                changeUser.setAskingYn("N");
+                userRepository.save(changeUser);
+            }
+
+            if (changeUser.getUserOrder() > order) {
+                changeUser.setAskingYn("Y");
+                break;
+            }
+        }
+
         System.out.println("resultMap = " + resultMap);
 
         return resultMap;
