@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.PersistenceException;
 import javax.xml.ws.Response;
 import java.util.Optional;
 
@@ -30,13 +31,52 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> userList(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject> getUser(@PathVariable Long id) {
         Optional<User> user = userService.getUser(id);
-        if(user.isPresent()){
-            return new ResponseEntity<User>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-        }
+        System.out.println("user = " + user);
+            if(user.isPresent()) {
+                return this.createSuccessResponseJson(user.get());
+            } else {
+                return null;
+            }
+    }
+
+//    @PostMapping("/user/{id}")
+//    public ResponseEntity<ResponseObject> getUserPost(@PathVariable Long id) {
+//        Optional<User> user = userService.getUser(id);
+//        System.out.println("user = " + user);
+//        if(user.isPresent()) {
+//            return this.createSuccessResponseJson(user);
+//        } else {
+//            return null;
+//        }
+//    }
+
+    /**
+     * 메소드 오버로딩
+     * 성공 객체를 만들어 보낸다.
+     * @param obj
+     * @return
+     */
+    protected ResponseEntity<ResponseObject> createSuccessResponseJson(Object obj) {
+        return this.createSuccessResponseJson(obj, "");
+    }
+
+    /**
+     * 화면으로 성공 JSON을 만들어 보내준다.
+     * @param responseObject
+     * @param message
+     * @return
+     */
+    protected ResponseEntity<ResponseObject> createSuccessResponseJson(Object responseObject, String message) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new SuccessResponse(
+                        "200",
+                        responseObject,
+                        true,
+                        message
+                ));
     }
 
     @PutMapping("/user/{id}")

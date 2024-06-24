@@ -34,6 +34,9 @@ public class StompController {
             String type = TypeUtil.stringValue(param.get("type"));
             Message message = new Message();
             message.setUserName(TypeUtil.stringValue(param.get("userName")));
+            if(param.get("userId") != null && TypeUtil.longValue(param.get("userId")) > 0L){
+                message.setUserId(TypeUtil.longValue(param.get("userId")));
+            }
             message.setType(type);
             message.setData(TypeUtil.stringValue(param.get("data")));
             System.out.println("type = " + type);

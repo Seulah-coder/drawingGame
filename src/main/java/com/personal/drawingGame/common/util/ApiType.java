@@ -27,6 +27,8 @@ import java.util.Map;
 public class ApiType {
     protected static final Logger logger = LoggerFactory.getLogger(ApiType.class);
 
+    private static final String naverKey = SystemPropertyHelper.getProperty("naver.ocr.api.key");
+
     /**
      * 수학 제외 기타 과목 OCR => NaverOCR 사용
      * @param url
@@ -60,7 +62,7 @@ public class ApiType {
 
         http.setEntity(new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON));
         http.setHeader("Content-Type", "application/json");
-        http.setHeader("X-OCR-SECRET", "");
+        http.setHeader("X-OCR-SECRET", naverKey);
         try {
             HttpResponse response = httpClient.execute(http);
 

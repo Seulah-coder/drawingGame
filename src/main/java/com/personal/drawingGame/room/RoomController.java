@@ -67,8 +67,6 @@ public class RoomController {
             System.out.println("user = " + user.getId());
 
 
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

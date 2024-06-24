@@ -89,6 +89,10 @@
 
             $('#viewer').empty();
 
+            const userRole = document.getElementById('userRole').value;
+            console.log(userRole);
+
+
             $.ajax({
                 type: "GET",
                 url: '/drawing',
@@ -128,6 +132,7 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
+                    console.log(res);
 
                     if(!res.user){
                         alert(res.error);
@@ -135,7 +140,9 @@
                     } else {
                         $('#roomCode').val(res.user.roomCode);
                         $('#userName').val(res.user.userName);
+                        $('#userId').val(res.user.id);
                         $('#userRole').val(res.user.userRole);
+                        $('#askingYn').val(res.user.askingYn);
                         $('#viewer').empty();
                         $('#waitingMessage').show();
 
@@ -173,6 +180,8 @@
                 correctAnswer(content);
             } else if(content.type === 'moveNextQuestion'){
                 moveNextQuestion();
+            } else if(content.type === 'checkUserStatus'){
+                checkNextQuestionStatus();
             }
 
         }
@@ -187,34 +196,28 @@
             const correctUser = content.userName;
             alert(correctUser + "정답! 정답은 " + content.correctAnswer);
             $('#chatting').empty();
+            const askingYn = document.getElementById('askingYn').value;
+            console.log(askingYn);
         }
 
         window.checkSubmitAnswer= function (data){
+            console.log(data);
             const roomId = document.getElementById('roomCode').value;
             const userRole = document.getElementById('userRole').value;
             const askingYn = document.getElementById('askingYn').value;
+            console.log(askingYn);
             if(askingYn === "Y"){
                 const correctAnswer = document.getElementById('correctAnswer')
                 if(correctAnswer.innerText && correctAnswer.innerText === data.writeAnswer){
                   //정답이면 alert 보내고 5초 후에 끄고 다음 화면으로 넘어가는 로직
-                    const message = {
+                    const params = {
                         roomId: roomId,
-                        userName: data.userName,
+                        userId: data.userId,
                         correctAnswer : correctAnswer.innerText,
                         type: "correctAnswer",
                     }
-
-                        $.ajax({
-                            type: "POST",
-                            url: '/submitAnswer',
-                            cache: false,
-                            dataType: 'json',
-                            data: message,
-                            success:function (data){
-
-                                stomp.send('/pub/game', {}, JSON.stringify(message));
-                            },
-                        });
+                    console.log(params);
+                    sendCorrectAnswer(params)
 
                 } else {
                     const chatSpace = document.getElementById('chatting');
@@ -226,6 +229,47 @@
 
         }
 
+        window.sendCorrectAnswer = function (params){
+            $.ajax({
+                type: "POST",
+                url: '/submitAnswer',
+                cache: false,
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(params),
+                success:function (data){
+                    console.log(data);
+                    if(data.success === true){
+                        const message = {
+                            roomId: roomCode,
+                            type: "checkUserStatus",
+                        }
+                        stomp.send('/pub/game', {}, JSON.stringify(message));
+                    }
+                },
+            });
+        }
+
+        window.checkNextQuestionStatus = async function () {
+
+            const message = {
+                roomId: roomCode,
+                type: "correctAnswer",
+            }
+            stomp.send('/pub/game', {}, JSON.stringify(message));
+
+            const userId = document.getElementById('userId').value;
+            const response = await fetch("/restful/api/user/" + userId, {
+                method: "GET",
+                header : {
+                    "Content-Type" : "application/json",
+                },
+            })
+            console.log(response);
+
+        }
+
+
         window.sendDrawingDataHandler = function (data){
             const viewCanvas = document.getElementById('viewCanvas');
 
@@ -236,7 +280,11 @@
         }
 
         window.drawingHandler = function (){
+            const userRole = document.getElementById('userRole').value;
             const askingYn = document.getElementById('askingYn').value;
+            console.log(userRole);
+            console.log(askingYn);
+
 
             if(askingYn === "N"){
                 $.ajax({
@@ -279,15 +327,14 @@
                         alert('에러 발생');
                     }
                 });
+            } else {
+                console.log("문제 푸는 사람!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             }
 
 
         }
 
         window.enterHandler = function (userName){
-
-
-            const userRole = document.getElementById('userRole').value;
 
             studentCount ++;
             $('#studentCount').html(studentCount+ "명");
@@ -306,6 +353,7 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
+                    console.log(res);
 
                     const roomInfo = res.room;
                     const userInfo = res.user;
@@ -319,6 +367,7 @@
 
                     $('#roomCode').val(userInfo.roomCode);
                     $('#userName').val(userInfo.userName);
+                    $('#userId').val(userInfo.id);
                     $('#userRole').val(userInfo.userRole);
                     $('#askingYn').val(userInfo.askingYn);
 
@@ -334,18 +383,20 @@
         }
 
         window.submitAnswer = function (){
-            const userName = document.getElementById('userName').value;
+            const userId = document.getElementById('userId').value;
             const roomCode = document.getElementById('roomCode').value;
-            const writeAnswer = document.getElementById('writeAnswer').value;
+            let writeAnswer = document.getElementById('writeAnswer').value;
 
             const message = {
-                "userName" : userName,
+                "userId" : userId,
                 "roomId" : roomCode,
                 "writeAnswer" : writeAnswer,
                 "type": "submitAnswer"
             }
 
             stomp.send('/pub/game', {}, JSON.stringify(message));
+
+            writeAnswer = "";
 
             // console.log(writeAnswer);
             // console.log(correctAnswer);
@@ -430,6 +481,7 @@
 <input type="hidden" id="userName">
 <input type="hidden" id="askingYn">
 <input type="hidden" id="roomCode">
+<input type="hidden" id="userId">
 
 </div>
 

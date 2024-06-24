@@ -22,36 +22,26 @@ public class QuestionService {
     @Autowired
     UserRepository userRepository;
 
-    public Map<String, Object> submitAnswer(Map<String, Object> params) {
-        System.out.println("params = " + params);
+    public void submitAnswer(Map<String, Object> params) {
         Map<String, Object> resultMap = new HashMap<>();
-        //답을 맞추면 다음 user를 askingYn을 y로 만들어야 함
         Long userId = TypeUtil.longValue(params.get("userId"));
         User user = userRepository.getById(userId);
+        System.out.println("user = " + user);
         user.setCorrectCount(user.getCorrectCount() + 1);
+        user.setAskingYn("Y");
         userRepository.save(user);
         //맞춘 count 올려줌
 
-        //다음 순서 찾아서 askingYn바꿔줘야함
         String roomCode = TypeUtil.stringValue(params.get("roomCode"));
         List<User> users = userRepository.findAllByRoomCodeOrderByUserOrder(roomCode);
         int order = 0;
         for (User changeUser : users) {
-            if (changeUser.getAskingYn().equals("Y")) {
-                order = changeUser.getUserOrder();
+            if(changeUser != user){
                 changeUser.setAskingYn("N");
                 userRepository.save(changeUser);
             }
-
-            if (changeUser.getUserOrder() > order) {
-                changeUser.setAskingYn("Y");
-                break;
-            }
+            //맞춘 사람이 문제 내기
         }
-
-        System.out.println("resultMap = " + resultMap);
-
-        return resultMap;
     }
 
     public Question getQuestion(){

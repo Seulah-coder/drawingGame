@@ -21,10 +21,11 @@ public class QuestionController {
 
     @PostMapping("/submitAnswer")
     @ResponseBody
-    public Map<String, Object> submitAnswer(HttpServletRequest request, Map<String, Object> params){
+    public Map<String, Object> submitAnswer(@RequestBody Map<String, Object> params){
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            resultMap = questionService.submitAnswer(params);
+            questionService.submitAnswer(params);
+            resultMap.put("success", true);
 
         }catch (Exception e){
             e.printStackTrace();
